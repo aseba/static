@@ -69,7 +69,8 @@
                 // Construct the URL by replacing [csl_id] with the fetched value
                 const url =
                     "https://hooks.zapier.com/hooks/catch/18817038/2gdjfj9/?csl_id=" +
-                    encodeURIComponent(csl_id);
+                    encodeURIComponent(csl_id) +
+                    "&result=1";
 
                 // Call the URL in the background
                 fetch(url)
