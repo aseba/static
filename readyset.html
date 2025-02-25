@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Status Page</title>
+        <style>
+            /* Center content */
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+                text-align: center;
+            }
+            /* Spinner styling */
+            .spinner {
+                border: 16px solid #f3f3f3;
+                border-top: 16px solid #3498db;
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+                margin: auto;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            /* Status icon styling */
+            .status {
+                font-size: 72px;
+            }
+            .error {
+                font-size: 32px;
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            <!-- Spinner is shown while the call is in progress -->
+            <div class="spinner" id="spinner"></div>
+        </div>
+
+        <script>
+            // Function to extract query parameters
+            function getQueryParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const csl_id = getQueryParameter("csl_id");
+
+                // Check if csl_id exists
+                if (!csl_id) {
+                    document.getElementById("content").innerHTML =
+                        '<div class="error">‼️<br>Missing csl_id parameter.</div>';
+                    return;
+                }
+
+                // Construct the URL by replacing [csl_id] with the fetched value
+                const url =
+                    "https://hooks.zapier.com/hooks/catch/18817038/2gdjfj9/?csl_id=" +
+                    encodeURIComponent(csl_id);
+
+                // Call the URL in the background
+                fetch(url)
+                    .then((response) => {
+                        if (response.status === 200) {
+                            // Replace spinner with a checkmark if successful
+                            document.getElementById("content").innerHTML =
+                                '<div class="status">✅</div>';
+                        } else {
+                            // Replace spinner with error icon and message on failure
+                            document.getElementById("content").innerHTML =
+                                '<div class="error">‼️<br>Something failed. Please contact the BI team</div>';
+                        }
+                    })
+                    .catch((error) => {
+                        // Replace spinner with error icon and message on failure
+                        document.getElementById("content").innerHTML =
+                            '<div class="error">‼️<br>Something failed. Please contact the BI team</div>';
+                    });
+            });
+        </script>
+    </body>
+</html>
